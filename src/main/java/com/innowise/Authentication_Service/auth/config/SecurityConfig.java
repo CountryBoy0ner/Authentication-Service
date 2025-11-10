@@ -16,14 +16,17 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/auth/register", "/auth/login", "/auth/refresh", "/auth/validate")
+                        .permitAll()
+                        .anyRequest()
+                        .permitAll() // позже можно закрыть JWT-ом
                 )
-
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form.disable());
+
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
