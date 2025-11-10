@@ -5,6 +5,7 @@ import com.innowise.Authentication_Service.auth.dto.UserResponse;
 import com.innowise.Authentication_Service.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,5 +23,4 @@ public class AuthController {
         UserResponse user = authService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
-
 }
