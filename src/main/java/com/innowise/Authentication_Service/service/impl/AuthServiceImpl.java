@@ -25,7 +25,6 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    //save user credentials
     @Override
     @Transactional
     public UserResponse registerUser(RegisterRequest request) {
@@ -59,7 +58,6 @@ public class AuthServiceImpl implements AuthService {
         return response;
     }
 
-    //create token
     @Transactional(readOnly = true)
     @Override
     public AuthResponse login(LoginRequest request) {
@@ -83,7 +81,6 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    //refresh token
     @Transactional(readOnly = true)
     @Override
     public AuthResponse refreshToken(RefreshTokenRequest request) {
@@ -108,7 +105,6 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    //validate toke
     @Override
     public ValidateTokenResponse validateToken(ValidateTokenRequest request) {
 
