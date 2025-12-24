@@ -19,6 +19,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // <--:id from User Service
+    @Column(name = "user_id", nullable = false, unique = true)
+    private Long userId;
+
     @Column(name = "username", nullable = false, unique = true, length = 255)
     private String username;
 

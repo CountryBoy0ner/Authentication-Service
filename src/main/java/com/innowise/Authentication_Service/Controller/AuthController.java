@@ -1,10 +1,10 @@
 package com.innowise.Authentication_Service.Controller;
 
-import com.innowise.Authentication_Service.auth.dto.*;
+import com.innowise.Authentication_Service.dto.*;
 import com.innowise.Authentication_Service.service.AuthService;
+import com.innowise.Authentication_Service.service.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final RegistrationService registrationService;
 
-    @PostMapping("/register") //save user credentials
-    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
-        UserResponse user = authService.registerUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+
+    @PostMapping("/register")
+    public UserResponse register(@RequestBody com.innowise.Authentication_Service.dto.Customized.RegisterRequest request) {
+        return registrationService.register(request);
     }
 
     //create token

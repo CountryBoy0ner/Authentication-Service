@@ -1,7 +1,7 @@
 package com.innowise.Authentication_Service.Controller;
 
 
-import com.innowise.Authentication_Service.auth.dto.UserResponse;
+import com.innowise.Authentication_Service.dto.UserResponse;
 import com.innowise.Authentication_Service.model.Role;
 import com.innowise.Authentication_Service.model.User;
 import com.innowise.Authentication_Service.repository.UserRepository;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+          http://www.liquibase.org/xml/ns/dbchangelog
+          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="2025-12-24-004-add-user-id-to-users" author="you">
+        <!-- 1) add nullable column -->
+        <addColumn tableName="users">
+            <column name="user_id" type="BIGINT"/>
+        </addColumn>
+
+        <!-- 2) backfill old rows (best-effort: set user_id = id) -->
+        <sql>
+            UPDATE users
+            SET user_id = id
+            WHERE user_id IS NULL;
+        </sql>
+
+        <!-- 3) enforce constraints -->
+        <addNotNullConstraint tableName="users"
+                              columnName="user_id"
+                              columnDataType="BIGINT"/>
+
+        <addUniqueConstraint tableName="users"
+                             columnNames="user_id"
+                             constraintName="uk_users_user_id"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,7 +1,7 @@
 package com.innowise.Authentication_Service.service.impl;
 
 import com.innowise.Authentication_Service.auth.JwtService;
-import com.innowise.Authentication_Service.auth.dto.*;
+import com.innowise.Authentication_Service.dto.*;
 import com.innowise.Authentication_Service.model.Role;
 import com.innowise.Authentication_Service.model.User;
 import com.innowise.Authentication_Service.repository.RoleRepository;

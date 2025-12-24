@@ -38,7 +38,7 @@ public class JwtService {
 
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .claim("userId", user.getId())
+                .claim("userId", user.getUserId())
                 .claim("roles", getRoleNames(user))
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(expiry))
@@ -52,7 +52,7 @@ public class JwtService {
 
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .claim("userId", user.getId())
+                .claim("userId", user.getUserId())
                 .claim("roles", getRoleNames(user))
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(expiry))

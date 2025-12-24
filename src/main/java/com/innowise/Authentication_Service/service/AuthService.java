@@ -1,6 +1,6 @@
 package com.innowise.Authentication_Service.service;
 
-import com.innowise.Authentication_Service.auth.dto.*;
+import com.innowise.Authentication_Service.dto.*;
 
 public interface AuthService {
     public UserResponse registerUser(RegisterRequest request);
