@@ -1,6 +1,5 @@
 package com.innowise.Authentication_Service.client;
 
-
 import com.innowise.Authentication_Service.dto.Customized.UserServiceCreateUserRequest;
 import com.innowise.Authentication_Service.dto.Customized.UserServiceUserDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +22,9 @@ public class UserServiceClient {
         return client.post()
                 .uri("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("X-Roles", "ROLE_ADMIN")
+                .header("X-User-Id", "0")  // Фиктивный ID пользователя
+                .header("X-Username", "internal")  // Фиктивный username для внутреннего вызова
                 .body(req)
                 .retrieve()
                 .body(UserServiceUserDto.class);
@@ -34,9 +36,4 @@ public class UserServiceClient {
                 .retrieve()
                 .toBodilessEntity();
     }
-
-
-
-
-
 }

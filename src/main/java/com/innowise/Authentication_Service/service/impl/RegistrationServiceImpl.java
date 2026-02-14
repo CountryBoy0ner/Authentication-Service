@@ -20,35 +20,39 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public UserResponse register(RegisterRequest req) {
 
-        // create user in user-service
+        Long userId;
+        try {
+            userId = credentialsService.createCredentials(req.username, req.password);
+        } catch (Exception e) {
+            throw e;
+        }
+
         UserServiceCreateUserRequest createReq = new UserServiceCreateUserRequest();
+        createReq.id = userId;
         createReq.email = req.email;
         createReq.name = req.name;
         createReq.surname = req.surname;
         createReq.birthDate = req.birthDate;
 
-        UserServiceUserDto createdUser = userServiceClient.createUser(createReq);
+        System.out.println("Trying to create user with ID: " + userId);
 
-        // 2) сохранить credentials в auth-db
         try {
-            credentialsService.createCredentials(
-                    createdUser.id,
-                    req.username,
-                    req.password
-            );
+            UserServiceUserDto createdUser = userServiceClient.createUser(createReq);
+            if (!createdUser.id.equals(userId)) {
+                throw new RuntimeException("ID mismatch after creation");
+            }
         } catch (Exception e) {
-            // 3) rollback:
+            e.printStackTrace();
             try {
-                userServiceClient.deleteUser(createdUser.id);
+                credentialsService.deleteCredentials(userId);
             } catch (Exception rollbackEx) {
-                System.out.println(rollbackEx.getMessage());
-
+                System.out.println("Rollback failed: " + rollbackEx.getMessage());
             }
             throw e;
         }
 
         return UserResponse.builder()
-                .id(createdUser.id)      // <-- ID из user-service
+                .id(userId)
                 .username(req.username)
                 .enabled(true)
                 .build();

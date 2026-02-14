@@ -9,4 +9,5 @@
     <include file="/db/changelog/V1.1/db.changelog-202512.24-role admin-data-migration.xml"/>
     <include file="/db/changelog/V1.2/db.changelog-202512.24-role-user-data-migration.xml"/>
     <include file="db/changelog/V1.3/2025-12-24-004-add-user-id-to-users.xml"/>
+    <include file="/db/changelog/V1.4/2026-02-14-remove-user-id.xml"/>
 </databaseChangeLog>

@@ -22,7 +22,7 @@ public class CredentialsServiceImpl implements CredentialsService {
 
     @Override
     @Transactional
-    public void createCredentials(Long userId, String username, String rawPassword) {
+    public Long createCredentials(String username, String rawPassword) {
         if (userRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("Username is already taken");
         }
@@ -32,13 +32,19 @@ public class CredentialsServiceImpl implements CredentialsService {
                 .orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_USER").build()));
 
         User user = User.builder()
-                .userId(userId)
                 .username(username)
                 .password(passwordEncoder.encode(rawPassword))
                 .enabled(true)
                 .roles(Set.of(userRole))
                 .build();
 
-        userRepository.save(user);
+        User saved = userRepository.save(user);
+        return saved.getId();
+    }
+
+    @Override
+    @Transactional
+    public void deleteCredentials(Long id) {
+        userRepository.deleteById(id);
     }
 }

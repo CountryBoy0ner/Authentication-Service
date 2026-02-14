@@ -25,6 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    @Deprecated
     @Override
     @Transactional
     public UserResponse registerUser(RegisterRequest request) {

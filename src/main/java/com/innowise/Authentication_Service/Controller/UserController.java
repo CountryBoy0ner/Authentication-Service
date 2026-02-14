@@ -1,73 +1,50 @@
 package com.innowise.Authentication_Service.Controller;
 
-
-import com.innowise.Authentication_Service.dto.UserResponse;
-import com.innowise.Authentication_Service.model.Role;
-import com.innowise.Authentication_Service.model.User;
-import com.innowise.Authentication_Service.repository.UserRepository;
+import com.innowise.Authentication_Service.dto.UserDto;
+import com.innowise.Authentication_Service.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/me")
-    public UserResponse me(Authentication auth) {
-        String username = auth.getName();
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new AccessDeniedException("User not found"));
-
-        return UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .enabled(user.isEnabled())
-                .build();
+    public ResponseEntity<UserDto> me(
+            @RequestHeader(value = "X-User-Id", required = false) Long userId
+    ) {
+        if (userId == null) {
+            throw new AccessDeniedException("Authentication required");
+        }
+        return ResponseEntity.ok(userService.get(userId));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(u -> UserResponse.builder()
-                        .id(u.getId())
-                        .username(u.getUsername())
-                        .enabled(u.isEnabled())
-                        .build())
-                .collect(Collectors.toList());
+    public ResponseEntity<Page<UserDto>> getAll(
+            @PageableDefault(size = 20, sort = "id") Pageable pageable,
+            @RequestHeader(value = "X-Roles", required = false) String roles
+    ) {
+        if (roles == null || !roles.contains("ROLE_ADMIN")) {
+            throw new AccessDeniedException("Admin role required");
+        }
+        return ResponseEntity.ok(userService.getAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUserById(@PathVariable Long id, Authentication auth) {
-        String currentUsername = auth.getName();
-        User current = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new AccessDeniedException("User not found"));
-        boolean isAdmin = hasRole(current.getRoles(), "ROLE_ADMIN");
-        boolean isOwner = current.getId().equals(id);
-        if (!isAdmin && !isOwner) {
-            throw new AccessDeniedException("You can access only your own user info");
+    public ResponseEntity<UserDto> get(
+            @PathVariable Long id,
+            @RequestHeader(value = "X-Roles", required = false) String roles
+    ) {
+        if (roles == null || !roles.contains("ROLE_ADMIN")) {
+            throw new AccessDeniedException("Admin role required");
         }
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new AccessDeniedException("User not found"));
-        return UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .enabled(user.isEnabled())
-                .build();
-    }
-
-    private boolean hasRole(Set<Role> roles, String roleName) {
-        return roles.stream().anyMatch(r -> r.getName().equals(roleName));
+        return ResponseEntity.ok(userService.get(id));
     }
 }

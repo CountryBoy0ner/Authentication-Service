@@ -24,21 +24,18 @@ public class AuthController {
         return registrationService.register(request);
     }
 
-    //create token
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse tokens = authService.login(request);
         return ResponseEntity.ok(tokens);
     }
 
-    //refresh
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
         AuthResponse tokens = authService.refreshToken(request);
         return ResponseEntity.ok(tokens);
     }
 
-    //validate
     @PostMapping("/validate")
     public ResponseEntity<ValidateTokenResponse> validate(@Valid @RequestBody ValidateTokenRequest request) {
         ValidateTokenResponse response = authService.validateToken(request);
