@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+          http://www.liquibase.org/xml/ns/dbchangelog
+          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="2026-02-14-010-remove-user-id-from-users" author="you">
+        <!-- 1) Drop the unique constraint if it exists -->
+        <dropUniqueConstraint tableName="users"
+                              constraintName="uk_users_user_id"/>
+
+        <!-- 2) Drop the column -->
+        <dropColumn tableName="users"
+                    columnName="user_id"/>
+    </changeSet>
+
+</databaseChangeLog>

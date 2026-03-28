@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+          http://www.liquibase.org/xml/ns/dbchangelog
+          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="2025-12-24-007-seed-role-user" author="you">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM roles WHERE name = 'ROLE_USER'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="roles">
+            <column name="name" value="ROLE_USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2025-12-24-008-seed-user-user" author="you">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM users WHERE username = 'user'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="users">
+            <column name="username" value="user"/>
+            <!-- password = user123 (BCrypt hash below) -->
+            <column name="password" value="$2a$10$eOf0tu3XBP6ozsebFciWMOnK2Wv6cJif1vqcILUH6p4swPUE2g6iC"/>
+            <column name="enabled" valueBoolean="true"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2025-12-24-009-seed-user-user-role-link" author="you">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM user_roles ur
+                         JOIN users u ON u.id = ur.user_id
+                         JOIN roles r ON r.id = ur.role_id
+                WHERE u.username = 'user' AND r.name = 'ROLE_USER'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="user_roles">
+            <column name="user_id" valueComputed="(SELECT id FROM users WHERE username = 'user')"/>
+            <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name = 'ROLE_USER')"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

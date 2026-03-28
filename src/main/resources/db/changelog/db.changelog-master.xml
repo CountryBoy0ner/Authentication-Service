@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+          http://www.liquibase.org/xml/ns/dbchangelog
+          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+    <include file="/db/changelog/V1.0/db.changelog-2025.11.10-create-users-and-roles.xml"/>
+    <include file="/db/changelog/V1.1/db.changelog-202512.24-role admin-data-migration.xml"/>
+    <include file="/db/changelog/V1.2/db.changelog-202512.24-role-user-data-migration.xml"/>
+    <include file="db/changelog/V1.3/2025-12-24-004-add-user-id-to-users.xml"/>
+    <include file="/db/changelog/V1.4/2026-02-14-remove-user-id.xml"/>
+</databaseChangeLog>
